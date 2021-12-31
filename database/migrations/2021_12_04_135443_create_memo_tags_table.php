@@ -18,8 +18,8 @@ class CreateMemoTagsTable extends Migration
             $table->unsignedBigInteger('tag_id');
 
             // 外部キー制約
-            $table->foreign('memo_id')->references('memo')->on('id');
-            $table->foreign('tag_id')->references('tag')->on('id');
+            $table->foreign('memo_id')->references('id')->on('memos');
+            $table->foreign('tag_id')->references('id')->on('tags');
         });
     }
 
