@@ -22,4 +22,4 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-Route::post('/store', [HomeController::class, 'store'])->name('home');
+Route::post('/store', [HomeController::class, 'store'])->name('store');
