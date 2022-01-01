@@ -25,4 +25,12 @@ class HomeController extends Controller
     {
         return view('create');
     }
+
+    public function store(Request $request)
+    {
+        $posts = $request->all();
+        // dd()は入れられた値を全て展開して止める→デバックの役割を担う
+        dd($posts);
+        return view('create');
+    }
 }
