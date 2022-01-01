@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Memo;
 
 class HomeController extends Controller
 {
@@ -29,8 +30,7 @@ class HomeController extends Controller
     public function store(Request $request)
     {
         $posts = $request->all();
-        // dd()は入れられた値を全て展開して止める→デバックの役割を担う
-        dd($posts);
-        return view('create');
+
+        Memo::insert(['content' => $posts['content'], 'user_id' => \Auth::id() ]);
     }
 }
