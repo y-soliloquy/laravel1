@@ -24,6 +24,14 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // DBからメモの情報を取得する
+        $memos = Memo::select('memos.*')
+            -> where('user_id', '=', \Auth::id())
+            -> whereNull('deleted_at')
+            -> orderBy('updated_at', 'DESC')
+            -> get();
+        dd($memos);
+
         return view('create');
     }
 
@@ -32,5 +40,7 @@ class HomeController extends Controller
         $posts = $request->all();
 
         Memo::insert(['content' => $posts['content'], 'user_id' => \Auth::id() ]);
+
+        return redirect(route('home'));
     }
 }
