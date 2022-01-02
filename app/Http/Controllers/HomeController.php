@@ -54,6 +54,6 @@ class HomeController extends Controller
 
         $edit_memo = Memo::find($id);
 
-        return view('create', compact('memos', 'edit_memo'));
+        return view('edit', compact('memos', 'edit_memo'));
     }
 }
