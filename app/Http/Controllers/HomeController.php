@@ -30,7 +30,6 @@ class HomeController extends Controller
             -> whereNull('deleted_at')
             -> orderBy('updated_at', 'DESC')
             -> get();
-        dd($memos);
 
         return view('create', compact('memos'));
     }
