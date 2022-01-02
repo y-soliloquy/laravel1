@@ -32,7 +32,7 @@ class HomeController extends Controller
             -> get();
         dd($memos);
 
-        return view('create');
+        return view('create', compact('memos'));
     }
 
     public function store(Request $request)
