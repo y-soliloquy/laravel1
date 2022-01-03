@@ -65,4 +65,14 @@ class HomeController extends Controller
 
         return redirect(route('home'));
     }
+
+    public function destroy(Request $request)
+    {
+        $posts = $request->all();
+
+        // Memo::where('id', $posts['memo_id']) -> delete(); これだと物理削除になり対象がDBから消滅するため採用しない
+        Memo::where('id', $posts['memo_id']) -> update(['deleted_at' => date("Y-m-d H:i:s", time())]); // この方法で削除日時を追加し一覧に載せない仕方で論理削除する
+
+        return redirect(route('home'));
+    }
 }
