@@ -37,8 +37,13 @@ class HomeController extends Controller
     public function store(Request $request)
     {
         $posts = $request->all();
+        dd($posts);
 
-        Memo::insert(['content' => $posts['content'], 'user_id' => \Auth::id() ]);
+        DB::transaction(function() use($posts) {
+           $memo_id = Memo::insertGetId(['content' => $posts['content'], 'user_id' => \Auth::id() ]);
+
+        });
+
 
         return redirect(route('home'));
     }
