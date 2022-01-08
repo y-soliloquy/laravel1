@@ -48,7 +48,7 @@ class HomeController extends Controller
             // ユーザーのメモの中に追加する予定のタグがすでに存在しているか
             $isTagName = Tag::where('user_id', '=', \Auth::id()) -> where('name', '=', $posts['new_tag']) -> exists();
 
-            if(!empty($posts['new_tag']) && !$isTagName) {
+            if((!empty($posts['new_tag']) || $posts['new_tag'] === "0")&& !$isTagName) {
                 $tag_id = Tag::insertGetId(['user_id' => \Auth::id(), 'name' => $posts['new_tag']]);
                 MemoTag::insert(['memo_id' => $memo_id, 'tag_id' => $tag_id]);
             } else {
