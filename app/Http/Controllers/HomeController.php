@@ -34,6 +34,14 @@ class HomeController extends Controller
             -> orderBy('updated_at', 'DESC')
             -> get();
 
+        // DBからユーザーに紐づいたタグを取得する
+        $tags = Tag::where('user_id', '=', \Auth::id())
+            -> whereNull('deleted_at')
+            -> orderBy('id', 'DESC')
+            -> get();
+
+        dd($tags);
+
         return view('create', compact('memos'));
     }
 
