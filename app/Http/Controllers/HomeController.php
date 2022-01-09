@@ -82,12 +82,18 @@ class HomeController extends Controller
             -> get();
 
         $edit_memo = Memo::select('memos.*', 'tags.id AS tag_id')
-            -> leftJoin('memo_tags', 'memo_tags.memo_id', '=', 'memo.id')
+            -> leftJoin('memo_tags', 'memo_tags.memo_id', '=', 'memos.id')
             -> leftJoin('tags', 'memo_tags.tag_id', '=', 'tags.id')
-            -> where('user_id', '=', \Auth::id())
-            -> where('memo_id', '=', $id)
-            -> whereNull('deleted_at')
+            -> where('memos.user_id', '=', \Auth::id())
+            -> where('memos.id', '=', $id)
+            -> whereNull('memos.deleted_at')
             -> get();
+
+        $include_tags = [];
+        foreach($edit_memo as $memo) {
+            array_push($include_tags, $memo['tag_id']);
+        }
+        dd($include_tags);
 
         return view('edit', compact('memos', 'edit_memo'));
     }
