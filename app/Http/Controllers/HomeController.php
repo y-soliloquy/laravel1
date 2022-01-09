@@ -61,8 +61,10 @@ class HomeController extends Controller
             }
 
             // 既存タグが紐づけられたらmemo_tagsテーブルに追加する
-            foreach($posts['tags'] as $tag) {
-                MemoTag::insert(['memo_id' => $memo_id, 'tag_id' => $tag]);
+            if (!empty($posts['tags'][0])) {
+                foreach($posts['tags'] as $tag) {
+                    MemoTag::insert(['memo_id' => $memo_id, 'tag_id' => $tag]);
+                }
             }
         });
 
