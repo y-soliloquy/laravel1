@@ -81,7 +81,13 @@ class HomeController extends Controller
             -> orderBy('updated_at', 'DESC')
             -> get();
 
-        $edit_memo = Memo::find($id);
+        $edit_memo = Memo::select('memos.*', 'tags.id AS tag_id')
+            -> leftJoin('memo_tags', 'memo_tags.memo_id', '=', 'memo.id')
+            -> leftJoin('tags', 'memo_tags.tag_id', '=', 'tags.id')
+            -> where('user_id', '=', \Auth::id())
+            -> where('memo_id', '=', $id)
+            -> whereNull('deleted_at')
+            -> get();
 
         return view('edit', compact('memos', 'edit_memo'));
     }
