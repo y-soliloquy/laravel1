@@ -93,9 +93,13 @@ class HomeController extends Controller
         foreach($edit_memo as $memo) {
             array_push($include_tags, $memo['tag_id']);
         }
-        dd($include_tags);
 
-        return view('edit', compact('memos', 'edit_memo'));
+        $tags = Tag::where('user_id', '=', \Auth::id())
+        -> whereNull('deleted_at')
+        -> orderBy('id', 'DESC')
+        -> get();
+
+        return view('edit', compact('memos', 'edit_memo', 'include_tags', 'tags'));
     }
 
     public function update(Request $request)
