@@ -53,9 +53,9 @@ class HomeController extends Controller
             $memo_id = Memo::insertGetId(['content' => $posts['content'], 'user_id' => \Auth::id() ]);
 
             // ユーザーのメモの中に追加する予定のタグがすでに存在しているか
-            $isTagName = Tag::where('user_id', '=', \Auth::id()) -> where('name', '=', $posts['new_tag']) -> exists();
+            $isTagNameExist = Tag::where('user_id', '=', \Auth::id()) -> where('name', '=', $posts['new_tag']) -> exists();
 
-            if((!empty($posts['new_tag']) || $posts['new_tag'] === "0")&& !$isTagName) {
+            if((!empty($posts['new_tag']) || $posts['new_tag'] === "0")&& !$isTagNameExist) {
                 $tag_id = Tag::insertGetId(['user_id' => \Auth::id(), 'name' => $posts['new_tag']]);
                 MemoTag::insert(['memo_id' => $memo_id, 'tag_id' => $tag_id]);
             }
@@ -106,7 +106,27 @@ class HomeController extends Controller
     {
         $posts = $request->all();
 
-        Memo::where('id', $posts['memo_id']) -> update(['content' => $posts['content']]);
+        DB::transaction(function() use($posts) {
+            Memo::where('id', $posts['memo_id']) -> update(['content' => $posts['content']]);
+            // 対象のメモとタグのidに関する情報をDBから物理削除する
+            MemoTag::where('memo_id', '=', $posts['memo_id'])
+                -> delete();
+
+            // 対象のメモとタグのidに関する情報をDBに入れなおす
+            foreach($posts['tags'] as $tag) {
+                MemoTag::insert(['memo_id' => $posts['memo_id'], 'tag_id' => $tag]);
+            };
+
+            // 新しいタグが存在すればそれを追加
+            $isTagNameExist = Tag::where('user_id', '=', \Auth::id()) -> where('name', '=', $posts['new_tag']) -> exists();
+
+            if((!empty($posts['new_tag']) || $posts['new_tag'] === "0")&& !$isTagNameExist) {
+                $tag_id = Tag::insertGetId(['user_id' => \Auth::id(), 'name' => $posts['new_tag']]);
+                MemoTag::insert(['memo_id' => $posts['memo_id'], 'tag_id' => $tag_id]);
+            }
+
+        });
+
 
         return redirect(route('home'));
     }
