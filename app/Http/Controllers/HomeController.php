@@ -46,7 +46,7 @@ class HomeController extends Controller
     public function store(Request $request)
     {
         $posts = $request->all();
-        dd($posts);
+
 
 
         DB::transaction(function() use($posts) {
@@ -58,8 +58,11 @@ class HomeController extends Controller
             if((!empty($posts['new_tag']) || $posts['new_tag'] === "0")&& !$isTagName) {
                 $tag_id = Tag::insertGetId(['user_id' => \Auth::id(), 'name' => $posts['new_tag']]);
                 MemoTag::insert(['memo_id' => $memo_id, 'tag_id' => $tag_id]);
-            } else {
-                dd('いや、そのタグあるやんけ');
+            }
+
+            // 既存タグが紐づけられたらmemo_tagsテーブルに追加する
+            foreach($posts['tags'] as $tag) {
+                MemoTag::insert(['memo_id' => $memo_id, 'tag_id' => $tag]);
             }
         });
 
