@@ -40,14 +40,13 @@ class HomeController extends Controller
             -> orderBy('id', 'DESC')
             -> get();
 
-        dd($tags);
-
-        return view('create', compact('memos'));
+        return view('create', compact('memos', 'tags'));
     }
 
     public function store(Request $request)
     {
         $posts = $request->all();
+        dd($posts);
 
 
         DB::transaction(function() use($posts) {
