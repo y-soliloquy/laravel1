@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Medels\Memo;
+use App\Models\Memo;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // 全てのメソッドが呼ばれる前に走る処理
-        view() -> comporser('*', function($view) {
+        view() -> composer('*', function($view) {
             // DBからメモの情報を取得する
             $memos = Memo::select('memos.*')
             -> where('user_id', '=', \Auth::id())
