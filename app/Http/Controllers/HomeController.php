@@ -27,12 +27,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // DBからメモの情報を取得する
-        $memos = Memo::select('memos.*')
-            -> where('user_id', '=', \Auth::id())
-            -> whereNull('deleted_at')
-            -> orderBy('updated_at', 'DESC')
-            -> get();
 
         // DBからユーザーに紐づいたタグを取得する
         $tags = Tag::where('user_id', '=', \Auth::id())
