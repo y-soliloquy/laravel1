@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         // 全てのメソッドが呼ばれる前に走る処理
         view() -> composer('*', function($view) {
             $query_tag = \Request::query('tag');
-            dd($query_tag);
+
             // DBからメモの情報を取得する
             $memos = Memo::select('memos.*')
                 -> where('user_id', '=', \Auth::id())
