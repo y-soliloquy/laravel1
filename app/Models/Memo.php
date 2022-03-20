@@ -11,22 +11,18 @@ class Memo extends Model
 
     public function getMyMemo() {
         $query_tag = \Request::query('tag');
+
+        $query = Memo::query() -> select('memos.*')
+            -> where('user_id', '=', \Auth::id())
+            -> whereNull('deleted_at')
+            -> orderBy('updated_at', 'DESC');
+
         if (!empty($query_tag)) {
-            $memos = Memo::select('memos.*')
-                -> leftJoin('memo_tags', 'memo_tags.memo_id', '=', 'memos.id')
-                -> where('memo_tags.tag_id', '=', $query_tag)
-                -> where('user_id', '=', \Auth::id())
-                -> whereNull('deleted_at')
-                -> orderBy('updated_at', 'DESC')
-                -> get();
-        } else {
-        // DBからメモの情報を取得する
-            $memos = Memo::select('memos.*')
-                -> where('user_id', '=', \Auth::id())
-                -> whereNull('deleted_at')
-                -> orderBy('updated_at', 'DESC')
-                -> get();
+            $query -> leftJoin('memo_tags', 'memo_tags.memo_id', '=', 'memos.id')
+            -> where('memo_tags.tag_id', '=', $query_tag);
         }
+
+        $memos = $query -> get();
 
         return $memos;
     }
