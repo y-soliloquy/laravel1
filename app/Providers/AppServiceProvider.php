@@ -27,14 +27,10 @@ class AppServiceProvider extends ServiceProvider
     {
         // 全てのメソッドが呼ばれる前に走る処理
         view() -> composer('*', function($view) {
-            $query_tag = \Request::query('tag');
 
-            // DBからメモの情報を取得する
-            $memos = Memo::select('memos.*')
-                -> where('user_id', '=', \Auth::id())
-                -> whereNull('deleted_at')
-                -> orderBy('updated_at', 'DESC')
-                -> get();
+            $memo_model = new Memo();
+            $memos = $memo_model -> getMyMemo();
+
 
             // タグ一覧取得
             $tags = Tag::where('user_id', '=', \Auth::id())
